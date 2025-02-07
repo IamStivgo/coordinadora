@@ -1,0 +1,21 @@
+{
+  "name": "coordinatora-test",
+  "version": "1.0.0",
+  "description": "Backend Test Coordinadora",
+  "main": "server.js",
+  "scripts": {
+    "dev": "ts-node-dev src/server.ts",
+    "tsc": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stiven Gonzalez Olaya",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "5.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "5.7.3"
+  },
+  "dependencies": {
+    "express": "4.21.2"
+  }
+}

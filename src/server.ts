@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import config from './config';
 import router from './adapters/routes';
+import { connectDb } from './infrastructure/database';
 
 const PORT = config.PORT;
 const CLIENT_URL = config.CLIENT_URL;
@@ -19,6 +20,13 @@ app.get('/status', (_req, res) => {
 	});
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+	const isDbConnected = await connectDb();
+
+	if (!isDbConnected) {
+		console.error('Failed to connect to database');
+		process.exit(0);
+	}
+
 	console.log(`Server is running on port ${PORT}`);
 });

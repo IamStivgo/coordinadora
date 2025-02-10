@@ -8,19 +8,24 @@ import { IDatabase } from "../../database/dbSource";
 @injectable()
 export class PackageRepositoryImp implements IPackageRepository {
     constructor(
-        @inject(Types.IDatabase) 
+        @inject(Types.IDatabase)
         private db: IDatabase
-    ){}
+    ) { }
 
 
     async create(pack: CreatePackageDTO): Promise<PackageEntity | null> {
-        const { orderId, weight, width, height, depth, kind } = pack;
-        const id = v4();
-        const sql = `INSERT INTO packages (id, order_id, weight, width, height, depth, kind) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-        const params = [id, orderId, weight, width, height, depth, kind];
-        await this.db.executeQuery(sql, params);
-        const packResponse = this.findById(id);
-        return packResponse; 
+        try {
+            const { orderId, weight, width, height, depth, kind } = pack;
+            const id = v4();
+            const sql = `INSERT INTO packages (id, order_id, weight, width, height, depth, kind) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const params = [id, orderId, weight, width, height, depth, kind];
+            await this.db.executeQuery(sql, params);
+            const packResponse = this.findById(id);
+            return packResponse;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
     }
 
     async update(pack: PackageEntity): Promise<PackageEntity> {
@@ -43,7 +48,6 @@ export class PackageRepositoryImp implements IPackageRepository {
         const params = [id];
         const result = await this.db.executeQuery<PackageEntity[]>(sql, params);
         return result.length > 0 ? result[0] : null;
-        
     }
 
     async findByOrderId(orderId: string): Promise<PackageEntity[]> {
@@ -52,8 +56,4 @@ export class PackageRepositoryImp implements IPackageRepository {
         const result = await this.db.executeQuery<PackageEntity[]>(sql, params);
         return result;
     }
-
-
-
-    
 }

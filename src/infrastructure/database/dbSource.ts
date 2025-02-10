@@ -53,13 +53,20 @@ export class DbSource implements IDatabase {
     }
 
     async executeQuery<T>(sql: string, params?: (string | number | boolean | undefined)[]): Promise<T> {
-        if (!this.connection) {
-            throw new Error('Database connection not established');
+        try {
+            if (!this.connection) {
+                throw new Error('Database connection not established');
+            }
+
+            console.log('Executing query:', sql, params);
+
+            const [rows] = await this.connection.execute(sql, params);
+
+            return rows as T;
+        } catch (err) {
+            console.error(err);
+            throw new Error('Error executing query');
         }
-
-        const [rows] = await this.connection.execute(sql, params);
-
-        return rows as T;
     }
 
     private queryCreateUserTable: string = `

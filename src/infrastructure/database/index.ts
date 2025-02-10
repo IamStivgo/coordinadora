@@ -8,6 +8,6 @@ export const connectDb = async () => {
     return await db.connectDb();
 };
 
-export const executeQuery = async <T>(sql: string, params?: (string | number | boolean)[]): Promise<T> => {
+export const executeQuery = async <T>(sql: string, params?: (string | number | boolean | Date | undefined)[]): Promise<T> => {
     return await db.executeQuery<T>(sql, params);
 };

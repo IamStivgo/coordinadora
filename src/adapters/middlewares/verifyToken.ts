@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import config from "../../config";
 
-const SECRET = "secret";
+const SECRET = config.JWT_SECRET; 
 
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {

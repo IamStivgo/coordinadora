@@ -4,7 +4,7 @@ import config from '../../config';
 
 export interface IDatabase {
     connectDb(): Promise<Boolean>;
-    executeQuery<T>(sql: string, params?: (string | number | boolean)[]): Promise<T>;    
+    executeQuery<T>(sql: string, params?: (string | number | boolean | Date |undefined)[]): Promise<T>;    
 }
 
 @injectable()
@@ -44,12 +44,12 @@ export class DbSource implements IDatabase {
                     id VARCHAR(255) PRIMARY KEY,
                     first_name VARCHAR(255) NOT NULL,
                     last_name VARCHAR(255) NOT NULL,
-                    email VARCHAR(255) NOT NULL,
+                    email VARCHAR(255) NOT NULL UNIQUE,
                     password VARCHAR(255) NOT NULL,
-                    phone_number VARCHAR(255) NOT NULL,
-                    verified BOOLEAN NOT NULL,
-                    created_at DATETIME NOT NULL,
-                    updated_at DATETIME NOT NULL,
+                    phone_number VARCHAR(255) NOT NULL UNIQUE,
+                    verified BOOLEAN NOT NULL DEFAULT FALSE,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                     role ENUM('admin', 'client', 'driver')
                 );
             `);
@@ -60,7 +60,7 @@ export class DbSource implements IDatabase {
         }
     }
 
-    async executeQuery<T>(sql: string, params?: (string | number | boolean)[]): Promise<T> {
+    async executeQuery<T>(sql: string, params?: (string | number | boolean | undefined)[]): Promise<T> {
         if (!this.connection) {
             throw new Error('Database connection not established');
         }

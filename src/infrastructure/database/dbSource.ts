@@ -43,7 +43,6 @@ export class DbSource implements IDatabase {
             await this.connection.query(this.queryCreateOrderTables);
             await this.connection.query(this.queryCreatePackageTable);
             await this.connection.query(this.queryCreateOrderDetailTable);
-            console.log('Tables created');
             return true;
         } catch (err) {
             console.error(err);
@@ -82,8 +81,7 @@ export class DbSource implements IDatabase {
             recipient_name VARCHAR(255) NOT NULL,
             recipient_phone_number VARCHAR(255) NOT NULL,
             recipient_address VARCHAR(255) NOT NULL,
-            status ENUM('pending', 'in_progress', 'completed') NOT NULL,
-            number DECIMAL(10, 0) NOT NULL UNIQUE AUTO_INCREMENT,
+            number BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
             totalWeight DECIMAL(10, 3) NOT NULL,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

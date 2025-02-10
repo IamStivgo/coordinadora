@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
 import { Types } from "../../di/types";
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { inject, injectable } from "inversify";
 import { compareHash, generateHash, generateToken } from "../../domain/services/user.services";
 import { UserRole } from "../../domain/entities/user.entity";
 

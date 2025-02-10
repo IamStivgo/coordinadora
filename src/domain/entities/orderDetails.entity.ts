@@ -26,6 +26,6 @@ export class OrderDetailsEntity {
     }
 }
 
-export type CreateOrderDetailsDTO = Omit<OrderDetailsEntity, 'id | createdAt' | 'updatedAt'>;
+export type CreateOrderDetailsDTO = Omit<OrderDetailsEntity, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type QueryOrderDetailsDTO = Partial<OrderDetailsEntity>;

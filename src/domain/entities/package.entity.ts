@@ -29,6 +29,6 @@ export class PackageEntity {
     }
 }
 
-export type CreatePackageDTO = Omit<PackageEntity, "id | createdAt" | "updatedAt">
+export type CreatePackageDTO = Omit<PackageEntity, "id" | "createdAt" | "updatedAt">
 
 export type QueryPackageDTO = Partial<PackageEntity>

@@ -37,6 +37,6 @@ export class OrderEntity {
     }
 }
 
-export type CreateOrderDTO = Omit<OrderEntity, "id | createdAt" | "updatedAt" >
+export type CreateOrderDTO = Omit<OrderEntity, "id" | "number" | "packages" | "createdAt" | "updatedAt" >
 
 export type QueryOrderDTO = Partial<OrderEntity>

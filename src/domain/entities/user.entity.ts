@@ -41,7 +41,7 @@ export class UserEntity {
 	}
 }
 
-export type CreateUserDTO = Omit<UserEntity, "id | createdAt" | "updatedAt" | "verified">
+export type CreateUserDTO = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "verified">
 
 export type QueryUserDTO = Partial<UserEntity>
 

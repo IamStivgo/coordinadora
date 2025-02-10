@@ -82,7 +82,7 @@ export class DbSource implements IDatabase {
             recipient_phone_number VARCHAR(255) NOT NULL,
             recipient_address VARCHAR(255) NOT NULL,
             number BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
-            totalWeight DECIMAL(10, 3) NOT NULL,
+            total_weight DECIMAL(10, 3) NOT NULL,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)

@@ -18,6 +18,8 @@ import { RouteRepositoryImp } from "../infrastructure/repositories/mysql/routeRe
 
 import { UsersController } from "../adapters/controllers/users.controller";
 import { OrdersController } from "../adapters/controllers/orders.controller";
+import { RoutesController } from "../adapters/controllers/routes.controller";
+import { VehiclesController } from "../adapters/controllers/vehicles.controller";
 
 const container = new Container({
     defaultScope: "Singleton",
@@ -34,5 +36,7 @@ container.bind<IRouteRepository>(Types.IRouteRepository).to(RouteRepositoryImp);
 
 container.bind<UsersController>(Types.UsersController).to(UsersController);
 container.bind<OrdersController>(Types.OrdersController).to(OrdersController);
+container.bind<RoutesController>(Types.RoutesController).to(RoutesController);
+container.bind<VehiclesController>(Types.VehiclesController).to(VehiclesController);
 
 export { container };

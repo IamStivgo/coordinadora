@@ -11,4 +11,6 @@ export const Types = {
 
     UsersController: Symbol.for('UsersController'),
     OrdersController: Symbol.for('OrdersController'),
+    RoutesController: Symbol.for('RoutesController'),
+    VehiclesController: Symbol.for('VehiclesController'),
 }

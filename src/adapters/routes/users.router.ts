@@ -8,6 +8,6 @@ const controller : UsersController = container.get<UsersController>(Types.UsersC
 const router = Router();
 
 router.post('/sign-up', controller.signUp);
-router.post('/sign-in');
+router.post('/sign-in', controller.signIn);
 
 export default router;

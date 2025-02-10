@@ -12,13 +12,14 @@ export class UserRepositoryImp implements IUserRepository {
         private db: IDatabase
     ){}
 
-    async create(user: CreateUserDTO): Promise<UserEntity> {
+    async create(user: CreateUserDTO): Promise<UserEntity | null> {
         const { firstName, lastName, email, phoneNumber, password, role } = user;
         const id = v4();
         const query = `INSERT INTO users (id, first_name, last_name, email, phone_number, password, role ) VALUES (?,?, ?, ?, ?, ?, ?)`;
         const values = [id, firstName, lastName, email, phoneNumber, password, role];
-        const result = await this.db.executeQuery<UserEntity>(query, values);
-        return result;
+        await this.db.executeQuery<UserEntity>(query, values);
+        const userResponse = this.findById(id);
+        return userResponse;
     }
 
     async update(user: UserEntity): Promise<UserEntity> {
@@ -36,6 +37,13 @@ export class UserRepositoryImp implements IUserRepository {
         return true;
     }
 
+    async findByEmail(email: string): Promise<UserEntity | null> {
+        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber, password FROM users WHERE email = ?`;
+        const values = [email];
+        const result = await this.db.executeQuery<UserEntity[]>(query, values);
+        return result.length > 0 ? result[0] : null;
+    }
+
     async findById(id: string): Promise<UserEntity | null> {
         const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber FROM users WHERE id = ?`;
         const values = [id];
@@ -43,11 +51,18 @@ export class UserRepositoryImp implements IUserRepository {
         return result.length > 0 ? result[0] : null;
     }
 
-    async findByEmail(email: string): Promise<UserEntity | null> {
-        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber FROM users WHERE email = ?`;
+    async existsByEmail(email: string): Promise<boolean> {
+        const query = `SELECT id FROM users WHERE email = ?`;
         const values = [email];
         const result = await this.db.executeQuery<UserEntity[]>(query, values);
-        return result.length > 0 ? result[0] : null;
+        return result.length > 0;
+    }
+
+    async existsByPhoneNumber(phoneNumber: string): Promise<boolean> {
+        const query = `SELECT id FROM users WHERE phone_number = ?`;
+        const values = [phoneNumber];
+        const result = await this.db.executeQuery<UserEntity[]>(query, values);
+        return result.length > 0;
     }
 
 }

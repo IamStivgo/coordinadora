@@ -3,6 +3,7 @@ import { QueryPackageDTO } from "./package.entity"
 export class OrderEntity {
 	id?: string
 	userId?: string
+    routeId?: string
     recipientAddress: string
     recipientName: string
     recipientPhoneNumber: string
@@ -22,7 +23,8 @@ export class OrderEntity {
         userId?: string,
         id?: string,
         number?: number,
-        packages?: QueryPackageDTO[]
+        packages?: QueryPackageDTO[],
+        routeId?: string
     ) {
         this.recipientAddress = recipientAddress
         this.recipientName = recipientName
@@ -34,9 +36,10 @@ export class OrderEntity {
         this.id = id
         this.number = number
         this.packages = packages
+        this.routeId = routeId
     }
 }
 
-export type CreateOrderDTO = Omit<OrderEntity, "id" | "number" | "packages" | "createdAt" | "updatedAt" >
+export type CreateOrderDTO = Omit<OrderEntity, "id" | "number" | "packages" | "routerId" | "createdAt" | "updatedAt" >
 
 export type QueryOrderDTO = Partial<OrderEntity>

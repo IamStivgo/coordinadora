@@ -3,6 +3,7 @@ import { Types } from "../../di/types";
 import { IUserRepository } from "../../domain/repositories/user.repository";
 import { inject, injectable } from "inversify";
 import { compareHash, generateHash, generateToken } from "../../domain/services/user.services";
+import { UserRole } from "../../domain/entities/user.entity";
 
 @injectable()
 export class UsersController {
@@ -34,7 +35,7 @@ export class UsersController {
 			const payload = {
 				...req.body,
 				password: hash,
-				role: "client",
+				role: UserRole.CLIENT,
 			};
 
 			const user = await this.userRepository.create(payload);

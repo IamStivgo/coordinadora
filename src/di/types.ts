@@ -6,6 +6,7 @@ export const Types = {
     IOrderRepository: Symbol.for('IOrderRepository'),
     IPackageRepository: Symbol.for('IPackageRepository'),
     IOrderDetailRepository: Symbol.for('IOrderDetailRepository'),
+    IVehicleRepository: Symbol.for('IVehicleRepository'),
 
     UsersController: Symbol.for('UsersController'),
     OrdersController: Symbol.for('OrdersController'),

@@ -4,7 +4,7 @@ export enum OrderStatus {
     COMPLETED = 'completed',
 }
 
-export class OrderDetails {
+export class OrderDetailsEntity {
     id?: string;
     orderId?: string;
     status: OrderStatus;
@@ -26,6 +26,6 @@ export class OrderDetails {
     }
 }
 
-export type CreateOrderDetailsDTO = Omit<OrderDetails, 'id | createdAt' | 'updatedAt'>;
+export type CreateOrderDetailsDTO = Omit<OrderDetailsEntity, 'id | createdAt' | 'updatedAt'>;
 
-export type QueryOrderDetailsDTO = Partial<OrderDetails>;
+export type QueryOrderDetailsDTO = Partial<OrderDetailsEntity>;

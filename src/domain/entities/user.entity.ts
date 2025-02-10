@@ -1,3 +1,9 @@
+export enum UserRole {
+	ADMIN = 'admin',
+	CLIENT = 'client',
+	DRIVER = 'driver'
+}
+
 export class UserEntity {
 	id?: string
 	firstName: string
@@ -8,7 +14,7 @@ export class UserEntity {
 	verified: boolean
 	createdAt: Date
 	updatedAt: Date
-	role?: string
+	role?: UserRole
 
 	constructor(
 		firstName: string,
@@ -18,7 +24,7 @@ export class UserEntity {
 		verified: boolean,
 		createdAt: Date,
 		updatedAt: Date,
-		role?: string,
+		role?: UserRole,
 		password?: string,
 		id?: string
 	) {
@@ -35,6 +41,7 @@ export class UserEntity {
 	}
 }
 
-export type CreateUserDTO = Omit<UserEntity, "id | createdAt" | "updatedAt" | "verified" >
+export type CreateUserDTO = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "verified">
 
 export type QueryUserDTO = Partial<UserEntity>
+

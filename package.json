@@ -1,6 +1,6 @@
 {
   "name": "coordinatora-test",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Backend Test Coordinadora",
   "main": "server.js",
   "scripts": {

@@ -1,10 +1,11 @@
 import { injectable } from 'inversify';
 import mysql from 'mysql2/promise';
 import config from '../../config';
+import { generateHash } from '../../domain/services/user.services';
 
 export interface IDatabase {
     connectDb(): Promise<Boolean>;
-    executeQuery<T>(sql: string, params?: (string | number | boolean | Date | undefined)[]): Promise<T>;
+    executeQuery<T>(sql: string, params?: (string | number | boolean | Date | null | undefined)[]): Promise<T>;
 }
 
 @injectable()
@@ -39,12 +40,18 @@ export class DbSource implements IDatabase {
         }
 
         try {
+            const password = await generateHash('admin');
             await this.connection.query(this.queryCreateUserTable);
             await this.connection.query(this.queryCreateVehicleTable);
             await this.connection.query(this.queryCreateRouteTable);
             await this.connection.query(this.queryCreateOrderTables);
             await this.connection.query(this.queryCreatePackageTable);
             await this.connection.query(this.queryCreateOrderDetailTable);
+            try {
+                await this.connection.query(this.queryCreateAdminUser(password));
+            } catch (_) {
+                console.error('Admin user already exists');
+            }
             return true;
         } catch (err) {
             console.error(err);
@@ -52,7 +59,7 @@ export class DbSource implements IDatabase {
         }
     }
 
-    async executeQuery<T>(sql: string, params?: (string | number | boolean | undefined)[]): Promise<T> {
+    async executeQuery<T>(sql: string, params?: (string | number | boolean | null | undefined)[]): Promise<T> {
         try {
             if (!this.connection) {
                 throw new Error('Database connection not established');
@@ -84,13 +91,19 @@ export class DbSource implements IDatabase {
             role ENUM('admin', 'client', 'driver')
         );
         `;
+    private queryCreateAdminUser = (password: string) => {
+        return `
+        INSERT INTO users (id, first_name, last_name, email, password, phone_number, verified, role) 
+        VALUES ('admin', 'Admin', 'User', 'admin@coordinadora.com', '${password}', '1111111', true, 'admin');
+    `;
+    }
+
     private queryCreateVehicleTable: string = `
         CREATE TABLE IF NOT EXISTS vehicles (
             id VARCHAR(255) PRIMARY KEY,
             brand VARCHAR(255) NOT NULL,
             model VARCHAR(255) NOT NULL,
             license_plate VARCHAR(255) NOT NULL UNIQUE,
-            capacity DECIMAL(10, 3) NOT NULL,
             current_location VARCHAR(255),
             max_weight DECIMAL(10, 3) NOT NULL,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -107,8 +120,8 @@ export class DbSource implements IDatabase {
             distance DECIMAL(10, 3) NOT NULL,
             departure_time TIME NOT NULL,
             departure_date DATE NOT NULL,
-            arrival_time TIME NOT NULL,
-            arrival_date DATE NOT NULL,
+            arrival_time TIME,
+            arrival_date DATE,
             driver_id VARCHAR(255),
             vehicle_id VARCHAR(255),
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

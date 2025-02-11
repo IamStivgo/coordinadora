@@ -235,4 +235,20 @@ export class UsersController {
 		}
 	};
 
+	getDrivers = async (req: Request, res: Response) => {
+		try {
+			const { currentLocation } = req.query;
+			const drivers = await this.userRepository.getDrivers({ currentLocation: currentLocation as string });
+
+			return res.status(200).send({
+				success: true,
+				data: drivers,
+			});
+		} catch (error) {
+			console.log(error);
+			return res.status(500).send({
+				message: "Internal server error",
+			});
+		}
+	}
 }

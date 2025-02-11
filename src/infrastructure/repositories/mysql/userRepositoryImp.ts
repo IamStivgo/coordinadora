@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { v4 } from "uuid";
 import { Types } from "../../../di/types";
-import { UserEntity, CreateUserDTO } from "../../../domain/entities/user.entity";
+import { UserEntity, CreateUserDTO, QueryUserDTO } from "../../../domain/entities/user.entity";
 import { IUserRepository } from "../../../domain/repositories/user.repository";
 import { IDatabase } from "../../database/dbSource";
 
@@ -13,10 +13,10 @@ export class UserRepositoryImp implements IUserRepository {
     ){}
 
     async create(user: CreateUserDTO): Promise<UserEntity | null> {
-        const { firstName, lastName, email, phoneNumber, password, role } = user;
+        const { firstName, lastName, email, phoneNumber, password, role, currentLocation } = user;
         const id = v4();
-        const query = `INSERT INTO users (id, first_name, last_name, email, phone_number, password, role ) VALUES (?,?, ?, ?, ?, ?, ?)`;
-        const values = [id, firstName, lastName, email, phoneNumber, password, role];
+        const query = `INSERT INTO users (id, first_name, last_name, email, phone_number, password, role, current_location) VALUES (?,?, ?, ?, ?, ?, ?, ?)`;
+        const values = [id, firstName, lastName, email, phoneNumber, password, role, currentLocation || null];
         await this.db.executeQuery<UserEntity>(query, values);
         const userResponse = this.findById(id);
         return userResponse;
@@ -38,14 +38,14 @@ export class UserRepositoryImp implements IUserRepository {
     }
 
     async findByEmail(email: string): Promise<UserEntity | null> {
-        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber, password FROM users WHERE email = ?`;
+        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber, password, role FROM users WHERE email = ?`;
         const values = [email];
         const result = await this.db.executeQuery<UserEntity[]>(query, values);
         return result.length > 0 ? result[0] : null;
     }
 
     async findById(id: string): Promise<UserEntity | null> {
-        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber FROM users WHERE id = ?`;
+        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber, current_location as currentLocation FROM users WHERE id = ?`;
         const values = [id];
         const result = await this.db.executeQuery<UserEntity[]>(query, values);
         return result.length > 0 ? result[0] : null;
@@ -63,6 +63,17 @@ export class UserRepositoryImp implements IUserRepository {
         const values = [phoneNumber];
         const result = await this.db.executeQuery<UserEntity[]>(query, values);
         return result.length > 0;
+    }
+
+    async getDrivers(params: QueryUserDTO): Promise<UserEntity[]> {
+        const { currentLocation } = params;
+        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber, current_location as currentLocation 
+            FROM users 
+            WHERE role = 'driver'
+            AND current_location LIKE '${currentLocation}%'
+        `;
+        const result = await this.db.executeQuery<UserEntity[]>(query);
+        return result;
     }
 
 }

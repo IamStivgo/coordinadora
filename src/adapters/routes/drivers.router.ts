@@ -10,6 +10,7 @@ const controller : UsersController = container.get<UsersController>(Types.UsersC
 const router = Router();
 
 router.post('/', verifyToken, verifyAdmin ,controller.createDriver);
+router.get('/', verifyToken, verifyAdmin ,controller.getDrivers);
 router.get('/:id', verifyToken, verifyAdmin ,controller.getDriverById);
 router.put('/:id', verifyToken, verifyAdmin ,controller.updateDriver);
 

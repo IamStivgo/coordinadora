@@ -239,7 +239,7 @@
         }
       }
     },
-    "/v1/orders/{numberOrder}": {
+    "/v1/orders/{orderNumber}": {
       "get": {
         "tags": [
           "orders"
@@ -247,7 +247,7 @@
         "summary": "Get order by number",
         "parameters": [
           {
-            "name": "numberOrder",
+            "name": "orderNumber",
             "in": "path",
             "required": true,
             "schema": {
@@ -271,7 +271,7 @@
         }
       }
     },
-    "/v1/orders/{numberOrder}/status": {
+    "/v1/orders/{orderNumber}/status": {
       "get": {
         "tags": [
           "orders"
@@ -279,7 +279,7 @@
         "summary": "Get order status by number",
         "parameters": [
           {
-            "name": "numberOrder",
+            "name": "orderNumber",
             "in": "path",
             "required": true,
             "schema": {

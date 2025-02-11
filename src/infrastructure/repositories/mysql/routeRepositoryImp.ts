@@ -45,6 +45,14 @@ export class RouteRepositoryImp implements IRouteRepository{
         const params = [id];
         const result = await this.db.executeQuery<RouteEntity[]>(sql, params);
         return result.length > 0 ? result[0] : null;
-        
+    }
+
+    async findByOriginAndDestination(origin: string, destination: string): Promise<RouteEntity[] | null> {
+        const sql = `SELECT id, name, origin, destination, distance, departure_time as departureTime, departure_date as departureDate, 
+            arrival_time as arrivalTime, arrival_date as arrivalDate, driver_id as driverId, vehicle_id as vehicleId, created_at as createdAt, 
+            updated_at as updatedAt FROM routes WHERE origin = ? AND destination = ?`;
+        const params = [origin, destination];
+        const result = await this.db.executeQuery<RouteEntity[]>(sql, params);
+        return result.length > 0 ? result : null;
     }
 }

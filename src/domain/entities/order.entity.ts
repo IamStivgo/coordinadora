@@ -4,6 +4,7 @@ export class OrderEntity {
 	id?: string
 	userId?: string
     routeId?: string
+    originCity: string
     recipientAddress: string
     recipientCity: string
     recipientPostalCode: string
@@ -16,6 +17,7 @@ export class OrderEntity {
 	updatedAt: Date
 
 	constructor(
+        originCity: string,
         recipientAddress: string,
         recipientName: string,
         recipientPhoneNumber: string,
@@ -30,6 +32,7 @@ export class OrderEntity {
         packages?: QueryPackageDTO[],
         routeId?: string
     ) {
+        this.originCity = originCity
         this.recipientAddress = recipientAddress
         this.recipientCity = recipientCity
         this.recipientPostalCode = recipientPostalCode

@@ -5,7 +5,7 @@ import { IOrderRepository } from "../../domain/repositories/order.repository";
 import { IOrderDetailRepository } from "../../domain/repositories/orderDetail.repository";
 import { IPackageRepository } from "../../domain/repositories/package.repository";
 import { CreatePackageDTO } from "../../domain/entities/package.entity";
-import { sumWeight } from "../../domain/services/orders.service";
+import { sumWeight, validateAddress } from "../../domain/services/orders.service";
 import { OrderStatus } from "../../domain/entities/orderDetails.entity";
 
 @injectable()
@@ -17,13 +17,28 @@ export class OrdersController {
 	) { }
 
 	create = async (req: Request, res: Response) => {
-		const { recipientAddress, recipientName, recipientPhoneNumber, packages } = req.body;
+		const { recipientAddress, recipientCity, recipientPostalCode, recipientName, recipientPhoneNumber, packages } = req.body;
+		const address = `${recipientAddress} ${recipientCity} ${recipientPostalCode}`.replace(/ /g, "+");
+		const isValidAddress = await validateAddress(address);
+		const isInvalidPackages = packages.some((p: CreatePackageDTO) =>
+			p.weight <= 0 || p.width <= 0 || p.height <= 0 || p.depth <= 0 || p.weight > 1000 ||
+			p.width > 2 || p.height > 2 || p.depth > 2
+		);
+		const validateAllProperties = packages.every((p: CreatePackageDTO) =>
+			p.weight && p.width && p.height && p.depth && p.kind
+		);
+		if (isInvalidPackages || !validateAllProperties) {
+			return res.status(400).send("Invalid packages");
+		}
+		if (!isValidAddress) {
+			return res.status(400).send("Invalid address");
+		}
 		if (!req.user) {
 			return res.status(400).send("User not authenticated");
 		}
 		const userId = req.user.id;
 		const totalWeight = sumWeight(packages);
-		const order = await this.orderRepository.create({ recipientAddress, recipientName, recipientPhoneNumber, totalWeight, userId });
+		const order = await this.orderRepository.create({ recipientAddress, recipientCity, recipientPostalCode, recipientName, recipientPhoneNumber, totalWeight, userId });
 		if (!order) {
 			return res.status(500).send("Order creation failed");
 		}

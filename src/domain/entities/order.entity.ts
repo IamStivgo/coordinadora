@@ -5,6 +5,8 @@ export class OrderEntity {
 	userId?: string
     routeId?: string
     recipientAddress: string
+    recipientCity: string
+    recipientPostalCode: string
     recipientName: string
     recipientPhoneNumber: string
     totalWeight: number
@@ -17,6 +19,8 @@ export class OrderEntity {
         recipientAddress: string,
         recipientName: string,
         recipientPhoneNumber: string,
+        recipientCity: string,
+        recipientPostalCode: string,
         totalWeight: number,
         createdAt: Date,
         updatedAt: Date,
@@ -27,6 +31,8 @@ export class OrderEntity {
         routeId?: string
     ) {
         this.recipientAddress = recipientAddress
+        this.recipientCity = recipientCity
+        this.recipientPostalCode = recipientPostalCode
         this.recipientName = recipientName
         this.recipientPhoneNumber = recipientPhoneNumber
         this.totalWeight = totalWeight

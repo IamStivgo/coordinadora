@@ -135,9 +135,12 @@ export class DbSource implements IDatabase {
         CREATE TABLE IF NOT EXISTS orders (
             id VARCHAR(255) PRIMARY KEY,
             user_id VARCHAR(255) NOT NULL,
+            origin_city VARCHAR(255) NOT NULL,
             recipient_name VARCHAR(255) NOT NULL,
             recipient_phone_number VARCHAR(255) NOT NULL,
             recipient_address VARCHAR(255) NOT NULL,
+            recipient_city VARCHAR(255) NOT NULL,
+            recipient_postal_code VARCHAR(255) NOT NULL,
             number BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
             total_weight DECIMAL(10, 3) NOT NULL,
             route_id VARCHAR(255),

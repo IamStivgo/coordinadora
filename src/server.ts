@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 import config from './config';
 import router from './adapters/routes';
 import { connectCache, connectDb } from './infrastructure/database';
+import swaggerFile from '../swagger-output.json';
 
 const PORT = config.PORT;
 const CLIENT_URL = config.CLIENT_URL;
@@ -19,6 +21,8 @@ app.get('/status', (_req, res) => {
 		status: 'OK',
 	});
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(PORT, async () => {
 	const isDbConnected = await connectDb();

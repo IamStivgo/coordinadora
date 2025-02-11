@@ -32,4 +32,28 @@ export class VehiclesController {
             });
         }
     }
+
+    findById = async (req: Request, res: Response) => {
+        try {
+            const { id } = req.params;
+            const vehicle = await this.vehicleRepository.findById(id);
+            if (!vehicle) {
+                return res.status(404).send({
+                    success: false,
+                    message: "Vehicle not found",
+                });
+            }
+
+            return res.status(200).send({
+                success: true,
+                message: "Vehicle found",
+                data: vehicle,
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).send({
+                message: "Internal server error",
+            });
+        }
+    }
 }

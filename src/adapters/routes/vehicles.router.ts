@@ -10,4 +10,5 @@ const controller : VehiclesController = container.get<VehiclesController>(Types.
 const router = Router();
 
 router.post('/', verifyToken, verifyAdmin ,controller.create);
+router.get('/:id', verifyToken, verifyAdmin, controller.findById);
 export default router;

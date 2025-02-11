@@ -32,4 +32,28 @@ export class RoutesController {
             });
         }
     }
+
+    findById = async (req: Request, res: Response) => {
+        try {
+            const { id } = req.params;
+            const route = await this.routeRepository.findById(id);
+            if (!route) {
+                return res.status(404).send({
+                    success: false,
+                    message: "Route not found",
+                });
+            }
+
+            return res.status(200).send({
+                success: true,
+                message: "Route found",
+                data: route,
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).send({
+                message: "Internal server error",
+            });
+        }
+    }
 }

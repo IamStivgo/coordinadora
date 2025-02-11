@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { v4 } from "uuid";
 import { Types } from "../../../di/types";
-import { vehicleEntity, CreateVehicleDTO } from "../../../domain/entities/vehicle.entity";
+import { vehicleEntity, CreateVehicleDTO, QueryVehicleDTO } from "../../../domain/entities/vehicle.entity";
 import { IVehicleRepository } from "../../../domain/repositories/vehicle.repository";
 import { IDatabase } from "../../database/dbSource";
 
@@ -50,5 +50,13 @@ export class VehicleRepositoryImp implements IVehicleRepository{
         const params = [licensePlate];
         const result = await this.db.executeQuery<vehicleEntity[]>(sql, params);
         return result.length > 0 ? result[0] : null;
+    }
+
+    async getAvailableVehicle(params: QueryVehicleDTO): Promise<vehicleEntity[]> {
+        const { currentLocation } = params;
+        const sql = `SELECT id, brand, model, license_plate as licensePlate, current_location as currentLocation, max_weight as maxWeight, created_at as createdAt, updated_at as updatedAt FROM vehicles WHERE current_location = ?`;
+        const paramsSQL = [currentLocation];
+        const result = await this.db.executeQuery<vehicleEntity[]>(sql, paramsSQL);
+        return result;
     }
 }

@@ -5,4 +5,5 @@ export interface IVehicleRepository {
     update(vehicle: vehicleEntity): Promise<vehicleEntity>
     delete(id: string): Promise<boolean>
     findById(id: string): Promise<vehicleEntity | null>
+    findByNumberPlate(licensePlate: string): Promise<vehicleEntity | null>
 }

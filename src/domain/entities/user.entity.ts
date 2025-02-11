@@ -15,6 +15,7 @@ export class UserEntity {
 	createdAt: Date
 	updatedAt: Date
 	role?: UserRole
+	currentLocation?: string
 
 	constructor(
 		firstName: string,
@@ -26,7 +27,8 @@ export class UserEntity {
 		updatedAt: Date,
 		role?: UserRole,
 		password?: string,
-		id?: string
+		id?: string,
+		currentLocation?: string
 	) {
 		this.firstName = firstName
 		this.lastName = lastName
@@ -38,10 +40,10 @@ export class UserEntity {
 		this.role = role
 		this.password = password
 		this.id = id
+		this.currentLocation = currentLocation
 	}
 }
 
 export type CreateUserDTO = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "verified">
 
 export type QueryUserDTO = Partial<UserEntity>
-

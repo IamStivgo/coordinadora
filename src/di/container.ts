@@ -11,9 +11,15 @@ import { IPackageRepository } from "../domain/repositories/package.repository";
 import { PackageRepositoryImp } from "../infrastructure/repositories/mysql/packageRepositoryImp";
 import { IOrderDetailRepository } from "../domain/repositories/orderDetail.repository";
 import { OrderDetailRepositoryImp } from "../infrastructure/repositories/mysql/orderDetailRepositoryImp";
+import { IVehicleRepository } from "../domain/repositories/vehicle.repository";
+import { VehicleRepositoryImp } from "../infrastructure/repositories/mysql/vehicleRepositoryImp";
+import { IRouteRepository } from "../domain/repositories/route.repository";
+import { RouteRepositoryImp } from "../infrastructure/repositories/mysql/routeRepositoryImp";
 
 import { UsersController } from "../adapters/controllers/users.controller";
 import { OrdersController } from "../adapters/controllers/orders.controller";
+import { RoutesController } from "../adapters/controllers/routes.controller";
+import { VehiclesController } from "../adapters/controllers/vehicles.controller";
 
 const container = new Container({
     defaultScope: "Singleton",
@@ -25,8 +31,12 @@ container.bind<IUserRepository>(Types.IUserRepository).to(UserRepositoryImp);
 container.bind<IOrderRepository>(Types.IOrderRepository).to(OrderRepositoryImp);
 container.bind<IPackageRepository>(Types.IPackageRepository).to(PackageRepositoryImp);
 container.bind<IOrderDetailRepository>(Types.IOrderDetailRepository).to(OrderDetailRepositoryImp);
+container.bind<IVehicleRepository>(Types.IVehicleRepository).to(VehicleRepositoryImp );
+container.bind<IRouteRepository>(Types.IRouteRepository).to(RouteRepositoryImp);
 
 container.bind<UsersController>(Types.UsersController).to(UsersController);
 container.bind<OrdersController>(Types.OrdersController).to(OrdersController);
+container.bind<RoutesController>(Types.RoutesController).to(RoutesController);
+container.bind<VehiclesController>(Types.VehiclesController).to(VehiclesController);
 
 export { container };

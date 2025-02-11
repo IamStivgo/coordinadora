@@ -1,4 +1,4 @@
-import { UserEntity,  CreateUserDTO } from "../entities/user.entity";
+import { UserEntity,  CreateUserDTO, QueryUserDTO } from "../entities/user.entity";
 
 export interface IUserRepository {
     create(user: CreateUserDTO): Promise<UserEntity | null>
@@ -8,4 +8,5 @@ export interface IUserRepository {
     findByEmail(email: string): Promise<UserEntity | null>
     existsByEmail(email: string): Promise<boolean>
     existsByPhoneNumber(phoneNumber: string): Promise<boolean>
+    getDrivers(params: QueryUserDTO): Promise<UserEntity[]>
 }

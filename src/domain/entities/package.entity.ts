@@ -1,3 +1,8 @@
+export enum PackageKind{
+    BOX = "BOX",
+    ENVELOPE = "ENVELOPE",
+}
+
 export class PackageEntity {
     id?: string
     orderId?: string
@@ -5,6 +10,7 @@ export class PackageEntity {
     width: number
     height: number
     depth: number
+    kind: PackageKind
     createdAt: Date
     updatedAt: Date
 
@@ -13,6 +19,7 @@ export class PackageEntity {
         width: number,
         height: number,
         depth: number,
+        kind: PackageKind,
         createdAt: Date,
         updatedAt: Date,
         orderId?: string,
@@ -22,6 +29,7 @@ export class PackageEntity {
         this.width = width
         this.height = height
         this.depth = depth
+        this.kind = kind
         this.createdAt = createdAt
         this.updatedAt = updatedAt
         this.orderId = orderId

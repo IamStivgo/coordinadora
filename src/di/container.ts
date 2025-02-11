@@ -3,6 +3,7 @@ import { Container } from "inversify";
 import { Types } from "./types";
 
 import { IDatabase, DbSource } from "../infrastructure/database/dbSource";
+import { ICacheDb, CacheSource } from "../infrastructure/database/cacheSource";
 import { IUserRepository } from "../domain/repositories/user.repository";
 import { UserRepositoryImp } from "../infrastructure/repositories/mysql/userRepositoryImp";
 import { IOrderRepository } from "../domain/repositories/order.repository";
@@ -15,6 +16,8 @@ import { IVehicleRepository } from "../domain/repositories/vehicle.repository";
 import { VehicleRepositoryImp } from "../infrastructure/repositories/mysql/vehicleRepositoryImp";
 import { IRouteRepository } from "../domain/repositories/route.repository";
 import { RouteRepositoryImp } from "../infrastructure/repositories/mysql/routeRepositoryImp";
+import { ICacheRepository } from "../domain/repositories/cache.repository";
+import { CacheRepositoryImp } from "../infrastructure/repositories/redis";
 
 import { UsersController } from "../adapters/controllers/users.controller";
 import { OrdersController } from "../adapters/controllers/orders.controller";
@@ -26,6 +29,7 @@ const container = new Container({
 });
 
 container.bind<IDatabase>(Types.IDatabase).to(DbSource);
+container.bind<ICacheDb>(Types.ICacheDb).to(CacheSource);
 
 container.bind<IUserRepository>(Types.IUserRepository).to(UserRepositoryImp);
 container.bind<IOrderRepository>(Types.IOrderRepository).to(OrderRepositoryImp);
@@ -33,6 +37,7 @@ container.bind<IPackageRepository>(Types.IPackageRepository).to(PackageRepositor
 container.bind<IOrderDetailRepository>(Types.IOrderDetailRepository).to(OrderDetailRepositoryImp);
 container.bind<IVehicleRepository>(Types.IVehicleRepository).to(VehicleRepositoryImp );
 container.bind<IRouteRepository>(Types.IRouteRepository).to(RouteRepositoryImp);
+container.bind<ICacheRepository>(Types.ICacheRepository).to(CacheRepositoryImp);
 
 container.bind<UsersController>(Types.UsersController).to(UsersController);
 container.bind<OrdersController>(Types.OrdersController).to(OrdersController);

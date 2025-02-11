@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import config from './config';
 import router from './adapters/routes';
-import { connectDb } from './infrastructure/database';
+import { connectCache, connectDb } from './infrastructure/database';
 
 const PORT = config.PORT;
 const CLIENT_URL = config.CLIENT_URL;
@@ -25,6 +25,13 @@ app.listen(PORT, async () => {
 
 	if (!isDbConnected) {
 		console.error('Failed to connect to database');
+		process.exit(0);
+	}
+
+	const isCacheConnected = await connectCache();
+
+	if (!isCacheConnected) {
+		console.error('Failed to connect to cache');
 		process.exit(0);
 	}
 

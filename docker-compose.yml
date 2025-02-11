@@ -17,3 +17,18 @@ services:
     restart: always
     ports:
       - "6379:6379"
+  app:
+    build: .
+    container_name: app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=coordinadora
+      - CACHE_URL=redis://redis:6379

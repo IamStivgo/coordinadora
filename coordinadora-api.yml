@@ -1,0 +1,588 @@
+openapi: 3.0.1
+info:
+  title: Coordinadora API
+  description: API para la gestión de envíos de Coordinadora
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/
+paths:
+  /status:
+    get:
+      tags:
+        - status
+      summary: Get API status
+      responses:
+        "200":
+          description: OK
+  /v1/users/sign-up:
+    post:
+      tags:
+        - users
+      summary: Create a new client
+      requestBody:
+        description: User object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddUser"
+      responses:
+        201:
+          description: User created successfully
+        400:
+          description: Error creating user
+        409:
+          description: User already exists
+        500:
+          description: Internal server error
+  /v1/users/sign-in:
+    post:
+      tags:
+        - users
+      summary: Sign in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: User signed in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJwaG9uZU51bWJlciI6IjA5ODU2MzIxMzQ1Iiwicm9sZSI6IkNsaWVudCIsImlhdCI6MTYxNjI0NjY0MiwiZXhwIjoxNjE2MjUwMjQyfQ.1hKv7YyH7YpX6J5VY8zvQ5g9v5sY8YQ6Xw4T3q1M4Y0"
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Invalid request"
+        401:
+          description: Invalid password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Invalid password"
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "User not found"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+  /v1/orders/:
+    post:
+      tags:
+        - orders
+      summary: Create a new order
+      description: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipientAddress:
+                  type: string
+                recipientName:
+                  type: string
+                recipientPhoneNumber:
+                  type: string
+                packages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                      weight:
+                        type: number
+      responses:
+        201:
+          description: Order created successfully
+        400:
+          description: User not authenticated
+        500:
+          description: Order creation failed
+        401:
+          description: Unauthorized
+  /v1/orders/{orderNumber}:
+    get:
+      tags:
+        - orders
+      summary: Get order by number
+      parameters:
+        - name: orderNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Order found
+        400:
+          description: User not authenticated
+        404:
+          description: Order not found
+        401:
+          description: Unauthorized
+  /v1/orders/{orderNumber}/status:
+    get:
+      tags:
+        - orders
+      summary: Get order status by number
+      parameters:
+        - name: orderNumber
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Order number
+      responses:
+        200:
+          description: Order status found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    createdAt:
+                      type: string
+                      format: date-time
+        400:
+          description: User not authenticated
+        401:
+          description: Unauthorized
+        404:
+          description: Order not found
+
+  /v1/drivers/:
+    get:
+      tags:
+        - drivers
+      summary: Get all drivers
+      responses:
+        "401":
+          description: Unauthorized
+          content: {}
+        "403":
+          description: Forbidden
+          content: {}
+    post:
+      tags:
+        - drivers
+      summary: Create a new driver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                phoneNumber:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: The driver was created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      role:
+                        type: string
+              example:
+                success: true
+                message: User created successfully
+                data:
+                  id: 1
+                  email: ""
+                  phoneNumber: ""
+                  role: "DRIVER"
+        400:
+          description: Error creating user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              example:
+                success: false
+                message: Error creating user
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        409:
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              example:
+                success: false
+                message: User already exists
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Internal server error
+  /v1/drivers/{id}:
+    get:
+      tags:
+        - drivers
+      summary: Get driver by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      role:
+                        type: string
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+    put:
+      tags:
+        - drivers
+      summary: Update driver
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                phoneNumber:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Driver updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      role:
+                        type: string
+        400:
+          description: Error updating driver
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Driver not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        409:
+          description: Driver already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /v1/routes/:
+    post:
+      tags:
+        - routes
+      summary: Create a new route
+      description: Create a new route
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                origin:
+                  type: string
+                destination:
+                  type: string
+                distance:
+                  type: number
+      responses:
+        201:
+          description: Route created successfully
+        400:
+          description: Error creating route
+        500:
+          description: Internal server error
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+  /v1/vehicles/:
+    post:
+      tags:
+        - vehicles
+      summary: Create a new vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plate:
+                  type: string
+                model:
+                  type: string
+                year:
+                  type: number
+                capacity:
+                  type: number
+                status:
+                  type: string
+                  enum: ['ACTIVE', 'INACTIVE']
+              example:
+                plate: "ABC-123"
+                model: "Fiesta"
+                year: 2021
+                capacity: 1000
+                status: "ACTIVE"
+      responses:
+        201:
+          description: Vehicle created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      plate:
+                        type: string
+                      model:
+                        type: string
+                      year:
+                        type: number
+                      capacity:
+                        type: number
+                      status:
+                        type: string
+        400:
+          description: Error creating vehicle
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        500:
+          description: Internal server error
+        
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1.0
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john@example.com
+    AddUser:
+      required:
+        - email
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john@example.com

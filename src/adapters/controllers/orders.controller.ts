@@ -16,7 +16,7 @@ export class OrdersController {
 		@inject(Types.IPackageRepository) private packageRepository: IPackageRepository
 	) { }
 
-    create = async (req: Request, res: Response) => {
+	create = async (req: Request, res: Response) => {
 		const { recipientAddress, recipientName, recipientPhoneNumber, packages } = req.body;
 		if (!req.user) {
 			return res.status(400).send("User not authenticated");
@@ -39,6 +39,47 @@ export class OrdersController {
 		}
 
 		return res.status(201).send({ order, packages: packagesResponse, orderDetail: orderDetailResponse });
-		
-    }
+
+	}
+
+	findByNumber = async (req: Request, res: Response) => {
+		const numberOrder = req.params.numberOrder;
+		if (!req.user) {
+			return res.status(400).send("User not authenticated");
+		}
+		const order = await this.orderRepository.findByNumber(numberOrder);
+		if (!order?.id) {
+			return res.status(404).send("Order not found");
+		}
+		const packages = await this.packageRepository.findByOrderId(order.id);
+		const orderDetail = await this.orderDetailRepository.findByOrderId(order.id);
+
+		const response = {
+			...order,
+			packages,
+			orderDetail
+		}
+
+		return res.status(200).send(response);
+	}
+
+	findStatusByNumber = async (req: Request, res: Response) => {
+		const numberOrder = req.params.numberOrder;
+		if (!req.user) {
+			return res.status(400).send("User not authenticated");
+		}
+		const order = await this.orderRepository.findByNumber(numberOrder);
+		if (!order?.id) {
+			return res.status(404).send("Order not found");
+		}
+		const orderDetail = await this.orderDetailRepository.findByOrderId(order.id);
+		const response = orderDetail.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+			.map((o) => {
+				return {
+					status: o.status,
+					createdAt: o.createdAt
+				}
+			});
+		return res.status(200).send(response);
+	}
 }

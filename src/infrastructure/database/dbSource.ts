@@ -145,7 +145,7 @@ export class DbSource implements IDatabase {
             updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (route_id) REFERENCES routes(id)
-        );
+        ) AUTO_INCREMENT=10000000000;
         `;
     private queryCreatePackageTable: string = `
         CREATE TABLE IF NOT EXISTS packages (

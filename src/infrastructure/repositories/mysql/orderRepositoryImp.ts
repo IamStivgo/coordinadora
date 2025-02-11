@@ -38,7 +38,7 @@ export class OrderRepositoryImp implements IOrderRepository {
     }
 
     async findById(id: string): Promise<OrderEntity | null> {
-        const sql = `SELECT id, user_id as userId, recipient_name as recipientName, recipient_phone_number as recipientPhoneNumber, recipient_address as recipientAddress, total_weight as totalWeight, created_at as createdAt, updated_at as updatedAt FROM orders WHERE id = ?`;
+        const sql = `SELECT id, user_id as userId, recipient_name as recipientName, recipient_phone_number as recipientPhoneNumber, recipient_address as recipientAddress, total_weight as totalWeight, created_at as createdAt, number, updated_at as updatedAt FROM orders WHERE id = ?`;
         const params = [id];
         const result = await this.db.executeQuery<OrderEntity[]>(sql, params);
         return result.length > 0 ? result[0] : null;

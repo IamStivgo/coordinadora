@@ -5,9 +5,9 @@ export class RouteEntity {
     destination: string;
     distance: number;
     departureTime: string;
-    departureDate: string;
+    departureDate: Date;
     arrivalTime?: string;
-    arrivalDate?: string;
+    arrivalDate?: Date;
     driverId?: string;
     vehicleId?: string;
     createdAt: Date;
@@ -20,9 +20,9 @@ export class RouteEntity {
         destination: string,
         distance: number,
         departureTime: string,
-        departureDate: string,
+        departureDate: Date,
         arrivalTime: string,
-        arrivalDate: string,
+        arrivalDate: Date,
         driverId: string,
         vehicleId: string,
         createdAt: Date,

@@ -9,5 +9,7 @@ const controller : OrdersController = container.get<OrdersController>(Types.Orde
 const router = Router();
 
 router.post('/', verifyToken, controller.create);
+router.get('/:numberOrder', verifyToken, controller.findByNumber);
+router.get('/:numberOrder/status', verifyToken, controller.findStatusByNumber);
 
 export default router;

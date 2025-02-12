@@ -76,4 +76,15 @@ export class UserRepositoryImp implements IUserRepository {
         return result;
     }
 
+    async updateDriverLocation(userId: string, location: string): Promise<UserEntity> {
+        const query = `UPDATE users SET current_location = ? WHERE id = ?`;
+        const values = [location, userId];
+        await this.db.executeQuery<UserEntity>(query, values);
+        const user = await this.findById(userId);
+        if (!user) {
+            throw new Error(`User with id ${userId} not found`);
+        }
+        return user;
+    }
+
 }

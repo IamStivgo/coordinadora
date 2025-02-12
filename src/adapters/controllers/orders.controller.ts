@@ -181,7 +181,7 @@ export class OrdersController {
 	}
 
 	finishOrder = async (req: Request, res: Response) => {
-		const { orderNumber } = req.body;
+		const { orderNumber, arrivalTime, arrivalDate } = req.body;
 		if (!req.user) {
 			return res.status(400).send("User not authenticated");
 		}
@@ -199,7 +199,7 @@ export class OrdersController {
 			return res.status(500).send("Order finish failed");
 		}
 
-		/*
+
 		if (!order.routeId) {
 			return res.status(400).send("Route ID not found");
 		}
@@ -214,14 +214,19 @@ export class OrdersController {
 			return res.status(404).send("Driver or vehicle not found");
 		}
 
-		const driverResponse = await this.userRepository.update({ ...driver, currentLocation: order.recipientCity });
-		const vehicleResponse = await this.vehicleRepository.update({ ...vehicle, currentLocation: order.recipientCity });
+		const driverResponse = await this.userRepository.updateDriverLocation(driver.id, order.recipientCity);
+		const vehicleResponse = await this.vehicleRepository.updateCurrentLocation(vehicle.id, order.recipientCity);
 
 		if (!driverResponse || !vehicleResponse) {
 			return res.status(500).send("Driver or vehicle update failed");
 		}
-		*/
-		
+
+		const routeResponse = await this.routeRepository.update({ ...route, arrivalTime, arrivalDate });
+
+		if (!routeResponse) {
+			return res.status(500).send("Route update failed");
+		}
+
 		const response = {
 			orderDetail: orderDetailResponse
 		}

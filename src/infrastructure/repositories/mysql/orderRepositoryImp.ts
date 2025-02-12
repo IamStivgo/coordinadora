@@ -23,9 +23,9 @@ export class OrderRepositoryImp implements IOrderRepository {
     }
 
     async update(order: OrderEntity): Promise<OrderEntity> {
-        const { id, userId, recipientName, recipientCity, recipientPostalCode, recipientPhoneNumber, recipientAddress, totalWeight } = order;
-        const sql = `UPDATE orders SET user_id = ?, recipient_name = ?, recipient_phone_number = ?, recipient_address = ?, recipient_city = ?, recipient_postal_code = ?, total_weight = ? WHERE id = ?`;
-        const params = [userId, recipientName, recipientPhoneNumber, recipientAddress, recipientCity, recipientPostalCode, totalWeight, id];
+        const { id, userId, recipientName, recipientCity, recipientPostalCode, recipientPhoneNumber, recipientAddress, totalWeight, routeId } = order;
+        const sql = `UPDATE orders SET user_id = ?, recipient_name = ?, recipient_phone_number = ?, recipient_address = ?, recipient_city = ?, recipient_postal_code = ?, total_weight = ?, route_id = ? WHERE id = ?`;
+        const params = [userId, recipientName, recipientPhoneNumber, recipientAddress, recipientCity, recipientPostalCode, totalWeight, routeId ,id];
         await this.db.executeQuery<OrderEntity>(sql, params);
         return order;
     }

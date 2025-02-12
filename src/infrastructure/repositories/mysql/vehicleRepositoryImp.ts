@@ -59,4 +59,15 @@ export class VehicleRepositoryImp implements IVehicleRepository{
         const result = await this.db.executeQuery<vehicleEntity[]>(sql, paramsSQL);
         return result;
     }
+
+    async updateCurrentLocation(vehicleId: string, location: string): Promise<vehicleEntity> {
+        const sql = `UPDATE vehicles SET current_location = ? WHERE id = ?`;
+        const params = [location, vehicleId];
+        await this.db.executeQuery<vehicleEntity>(sql, params);
+        const vehicle = await this.findById(vehicleId);
+        if (!vehicle) {
+            throw new Error(`Vehicle with id ${vehicleId} not found`);
+        }
+        return vehicle;
+    }
 }

@@ -9,4 +9,5 @@ export interface IUserRepository {
     existsByEmail(email: string): Promise<boolean>
     existsByPhoneNumber(phoneNumber: string): Promise<boolean>
     getDrivers(params: QueryUserDTO): Promise<UserEntity[]>
+    updateDriverLocation(userId: string, location: string): Promise<UserEntity>
 }

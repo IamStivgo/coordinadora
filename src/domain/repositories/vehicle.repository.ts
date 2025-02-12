@@ -7,4 +7,5 @@ export interface IVehicleRepository {
     findById(id: string): Promise<vehicleEntity | null>
     findByNumberPlate(licensePlate: string): Promise<vehicleEntity | null>
     getAvailableVehicle(params: QueryVehicleDTO): Promise<vehicleEntity[]>
+    updateCurrentLocation(vehicleId: string, location: string): Promise<vehicleEntity>
 }

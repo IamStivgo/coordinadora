@@ -109,7 +109,7 @@ export class UsersController {
 			if (userEmailExists) {
 				return res.status(409).send({
 					success: false,
-					message: "User already exists",
+					message: "Driver already exists",
 				});
 			}
 
@@ -134,13 +134,13 @@ export class UsersController {
 			if (!user) {
 				return res.status(400).send({
 					success: false,
-					message: "Error creating user",
+					message: "Error creating driver",
 				});
 			}
 
 			return res.status(201).send({
 				success: true,
-				message: "User created successfully",
+				message: "Driver created successfully",
 				data: user,
 			});
 		} catch (error) {
@@ -184,7 +184,7 @@ export class UsersController {
 			if(!user) {
 				return res.status(404).send({
 					success: false,
-					message: "User not found",
+					message: "Driver not found",
 				});
 			}
 
@@ -192,7 +192,7 @@ export class UsersController {
 			if (userEmailExists && email !== user.email) {
 				return res.status(409).send({
 					success: false,
-					message: "User already exists",
+					message: "Driver already exists",
 				});
 			}
 
@@ -217,13 +217,13 @@ export class UsersController {
 			if (!updatedUser) {
 				return res.status(400).send({
 					success: false,
-					message: "Error updating user",
+					message: "Error updating driver",
 				});
 			}
 
 			return res.status(200).send({
 				success: true,
-				message: "User updated successfully",
+				message: "Driver updated successfully",
 				data: updatedUser,
 			});
 

@@ -5,6 +5,7 @@ import { generateHash } from '../../domain/services/user.services';
 
 export interface IDatabase {
     connectDb(): Promise<Boolean>;
+    disconnectDb(): Promise<Boolean>;
     executeQuery<T>(sql: string, params?: (string | number | boolean | Date | null | undefined)[]): Promise<T>;
 }
 
@@ -26,6 +27,22 @@ export class DbSource implements IDatabase {
 
             this.createTables();
 
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+
+    async disconnectDb(): Promise<Boolean> {
+        if (!this.connection) {
+            console.error('Database connection not established');
+            return false;
+        }
+
+        try {
+            await this.connection.end();
+            console.log('Database disconnected');
             return true;
         } catch (err) {
             console.error(err);

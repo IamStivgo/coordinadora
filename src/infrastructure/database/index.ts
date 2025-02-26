@@ -10,6 +10,10 @@ export const connectDb = async () => {
     return await db.connectDb();
 };
 
+export const disconnectDb = async () => {
+    return await db.disconnectDb();
+};
+
 export const connectCache = async () => {
     return await dbCache.connectDb();
 };

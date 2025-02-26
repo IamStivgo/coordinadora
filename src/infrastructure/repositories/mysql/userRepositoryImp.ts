@@ -67,11 +67,13 @@ export class UserRepositoryImp implements IUserRepository {
 
     async getDrivers(params: QueryUserDTO): Promise<UserEntity[]> {
         const { currentLocation } = params;
-        const query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber, current_location as currentLocation 
+        let query = `SELECT id, first_name as firstName, last_name as lastName, email, phone_number as phoneNumber, current_location as currentLocation 
             FROM users 
             WHERE role = 'driver'
-            AND current_location LIKE '${currentLocation}%'
         `;
+        if (currentLocation) {
+            query = query.concat(` AND current_location LIKE '${currentLocation}%'`);
+        }
         const result = await this.db.executeQuery<UserEntity[]>(query);
         return result;
     }

@@ -28,6 +28,8 @@ export class CacheSource implements ICacheDb {
 				url: config.CACHE_URL
 			})
 
+			await this.client.connect()
+
 			console.log('Cache connected')
 
 			return true

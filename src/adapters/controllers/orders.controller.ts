@@ -10,6 +10,7 @@ import { OrderStatus } from "../../domain/entities/orderDetails.entity";
 import { IUserRepository } from "../../domain/repositories/user.repository";
 import { IVehicleRepository } from "../../domain/repositories/vehicle.repository";
 import { IRouteRepository } from "../../domain/repositories/route.repository";
+import { ICacheDb } from "../../infrastructure/database/cacheSource";
 
 @injectable()
 export class OrdersController {
@@ -19,7 +20,8 @@ export class OrdersController {
 		@inject(Types.IPackageRepository) private packageRepository: IPackageRepository,
 		@inject(Types.IUserRepository) private userRepository: IUserRepository,
 		@inject(Types.IVehicleRepository) private vehicleRepository: IVehicleRepository,
-		@inject(Types.IRouteRepository) private routeRepository: IRouteRepository
+		@inject(Types.IRouteRepository) private routeRepository: IRouteRepository,
+		@inject(Types.ICacheDb) private cacheDb: ICacheDb
 	) { }
 
 	create = async (req: Request, res: Response) => {
@@ -88,6 +90,14 @@ export class OrdersController {
 		if (!order?.id) {
 			return res.status(404).send("Order not found");
 		}
+
+		// cache
+		const cacheKey = `order-${orderNumber}`;
+		const cache: string | null = await this.cacheDb.getValue(cacheKey);
+		if (cache) {
+			return res.status(200).send(cache);
+		}
+
 		const packages = await this.packageRepository.findByOrderId(order.id);
 		const orderDetail = await this.orderDetailRepository.findByOrderId(order.id);
 
@@ -96,6 +106,8 @@ export class OrdersController {
 			packages,
 			orderDetail
 		}
+
+		await this.cacheDb.setValue(cacheKey, JSON.stringify(response), 60);
 
 		return res.status(200).send(response);
 	}
